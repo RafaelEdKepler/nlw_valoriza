@@ -11,17 +11,7 @@ class CreateUserService {
   async execute({name, email, admin} : IUserRequest) {
     const userRepositories = getCustomRepository(UserRepositories);
 
-    if (!email) {
-      throw new Error("Email was not informed");
-    }
-
-    const userAlreadyExists = await userRepositories.findOne({
-      email
-    })
-
-    if (userAlreadyExists) {
-      throw new Error("User already exists");
-    }
+    await this.validateInfo(name, email, userRepositories);
 
     const user = userRepositories.create({
       name, 
@@ -32,6 +22,24 @@ class CreateUserService {
     await userRepositories.save(user);
 
     return user;
+  }
+
+  async validateInfo(name: string, email: string, userRepositories: UserRepositories) {
+    if (!email) {
+      throw new Error("Email was not informed");
+    }
+
+    if (!name) {
+      throw new Error("Name was not informed");
+    }
+
+    const userAlreadyExists = await userRepositories.findOne({
+      email
+    })
+
+    if (userAlreadyExists) {
+      throw new Error("User already exists");
+    }
   }
 }
 
