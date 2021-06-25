@@ -61,16 +61,10 @@ class CreateComplimentService {
       throw new Error("An user cannot register a compliment for himself!");
     }
     
-    let user = await userRepositories.findOne(userReceiver)
+    const user = await userRepositories.findOne(userReceiver)
 
     if (!user) {
       throw new Error("User receiver is invalid!");
-    }
-
-    user = await userRepositories.findOne(userSender)
-
-    if (!user) {
-      throw new Error("User sender is invalid!");
     }
   }
 
